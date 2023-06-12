@@ -17,8 +17,10 @@ const result = await syphonx.execute({
         const result = await page.evaluate<ExtractState, ExtractState>(script, state);
         return result;
     },
-    onGoback: async () => {
-        await page.goBack();
+    onGoback: async ({ timeout, waitUntil }) => {
+        const response = await page.goBack({ timeout, waitUntil });
+        const status = response?.status();
+        return { status };
     },
     onHtml: async () => {
         const html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
@@ -34,20 +36,14 @@ const result = await syphonx.execute({
         return result;
     },
     onNavigate: async ({ url, timeout, waitUntil }) => {
-        let status = 0;
-        const listener = (response: playwright.Response) => {
-            if (response.url() === url)
-                status = response.status();
-        };
-        await page.on('response', listener);
-        await page.goto(url, { timeout, waitUntil });
-        if (waitUntil)
-            await page.waitForURL(url, { timeout, waitUntil });
-        await page.off('response', listener);
+        const response = await page.goto(url, { timeout, waitUntil });
+        const status = response?.status();
         return { status };
     },
-    onReload: async () => {
-        await page.reload();
+    onReload: async ({ timeout, waitUntil }) => {
+        const response = await page.reload({ timeout, waitUntil });
+        const status = response?.status();
+        return { status };
     },
     onScreenshot: async ({ selector, fullPage, ...options }) => {
         const path = `./screenshots/${new Date().toLocaleString("en-US", { hour12: false }).replace(/:/g, "-").replace(/\//g, "-").replace(/,/g, "")}.png`;
