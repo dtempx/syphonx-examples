@@ -1,0 +1,21 @@
+{
+  "name": "syphonx-cheerio1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [],
+  "author": "Dave Templin",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "syphonx-core": "^1.2.37"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.0",
+    "typescript": "^5.1.3"
+  }
+}
