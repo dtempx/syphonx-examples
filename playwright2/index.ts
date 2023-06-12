@@ -1,7 +1,7 @@
 import * as playwright from 'playwright';
 import * as syphonx from 'syphonx-core';
 import { promises as fs } from "fs";
-import { ExtractState } from 'syphonx-core';
+import { ExtractState, invokeAsyncMethod } from 'syphonx-core';
 
 const url = 'https://www.example.com/';
 const template = JSON.parse(await fs.readFile('./template.json', 'utf-8'));
@@ -24,25 +24,14 @@ const result = await syphonx.execute({
         const html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
         return html;
     },
-    onLocator: async (locators: syphonx.YieldLocator[]) => {
-        const result: Record<string, unknown> = {};
-        for (const { name, selector, frame, method, params } of locators) {
-            let locator = undefined as playwright.Locator | undefined;
-            if (frame)
-                locator = await page.frameLocator(frame).locator(selector);
-            else
-                locator = await page.locator(selector);
-            result[name] = await invokeAsyncMethod(locator, method, params);
-        }
+    onLocator: async ({ frame, selector, method, params }) => {
+        let locator = undefined as playwright.Locator | undefined;
+        if (frame)
+            locator = await page.frameLocator(frame).locator(selector);
+        else
+            locator = await page.locator(selector);
+        const result = await invokeAsyncMethod(locator, method, params);
         return result;
-
-        async function invokeAsyncMethod(obj: {}, method: string, args: unknown[] = []): Promise<unknown> {
-            const fn = (obj as Record<string, (...args: unknown[]) => unknown>)[method];
-            if (typeof fn === 'function') {
-                const result = await fn(...args);
-                return result;
-            }
-        }
     },
     onNavigate: async ({ url, timeout, waitUntil }) => {
         let status = 0;

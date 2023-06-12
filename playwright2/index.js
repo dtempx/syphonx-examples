@@ -1,6 +1,7 @@
 import * as playwright from 'playwright';
 import * as syphonx from 'syphonx-core';
 import { promises as fs } from "fs";
+import { invokeAsyncMethod } from 'syphonx-core';
 const url = 'https://www.example.com/';
 const template = JSON.parse(await fs.readFile('./template.json', 'utf-8'));
 const script = new Function('state', `return ${syphonx.script}(state)`);
@@ -20,24 +21,14 @@ const result = await syphonx.execute({
         const html = await page.evaluate(() => document.querySelector("*").outerHTML);
         return html;
     },
-    onLocator: async (locators) => {
-        const result = {};
-        for (const { name, selector, frame, method, params } of locators) {
-            let locator = undefined;
-            if (frame)
-                locator = await page.frameLocator(frame).locator(selector);
-            else
-                locator = await page.locator(selector);
-            result[name] = await invokeAsyncMethod(locator, method, params);
-        }
+    onLocator: async ({ frame, selector, method, params }) => {
+        let locator = undefined;
+        if (frame)
+            locator = await page.frameLocator(frame).locator(selector);
+        else
+            locator = await page.locator(selector);
+        const result = await invokeAsyncMethod(locator, method, params);
         return result;
-        async function invokeAsyncMethod(obj, method, args = []) {
-            const fn = obj[method];
-            if (typeof fn === 'function') {
-                const result = await fn(...args);
-                return result;
-            }
-        }
     },
     onNavigate: async ({ url, timeout, waitUntil }) => {
         let status = 0;
