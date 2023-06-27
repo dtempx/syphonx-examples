@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import * as syphonx from 'syphonx-core';
-import { promises as fs } from "fs";
+import { promises as fs } from 'fs';
 
 const template = JSON.parse(await fs.readFile('./template.json', 'utf-8'));
 const html = await fs.readFile('./example.html', 'utf-8');

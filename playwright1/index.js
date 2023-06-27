@@ -1,6 +1,6 @@
 import * as playwright from 'playwright';
 import * as syphonx from 'syphonx-core';
-import { promises as fs } from "fs";
+import { promises as fs } from 'fs';
 const url = 'https://www.example.com/';
 const template = JSON.parse(await fs.readFile('./template.json', 'utf-8'));
 const browser = await playwright.chromium.launch();

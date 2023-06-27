@@ -1,18 +1,23 @@
 import * as playwright from 'playwright';
+import * as dotenv from 'dotenv';
 import * as syphonx from 'syphonx-core';
-import { promises as fs } from "fs";
-import { ExtractState, invokeAsyncMethod } from 'syphonx-core';
+import { SyphonXApi, ExtractState, invokeAsyncMethod } from 'syphonx-lib';
 
-const url = 'https://www.example.com/';
-const template = JSON.parse(await fs.readFile('./template.json', 'utf-8'));
+dotenv.config();
+
+const api = new SyphonXApi(process.env.SYPHONX_API_KEY);
+
+const template = process.argv[2] || 'examples/example.json';
+const url = process.argv[3];
+
 const script = new Function('state', `return ${syphonx.script}(state)`) as (state: ExtractState) => ExtractState;
 
 const browser = await playwright.chromium.launch();
 const page = await browser.newPage();
 
-const result = await syphonx.execute({
-    url,
+const result = await api.run({
     template,
+    url,
     onExtract: async state => {
         const result = await page.evaluate<ExtractState, ExtractState>(script, state);
         return result;
@@ -56,6 +61,7 @@ const result = await syphonx.execute({
         await page.waitForLoadState(waitUntil, { timeout });
     }
 });
+
 console.log(JSON.stringify(result, null, 2));
 
 await browser.close();
