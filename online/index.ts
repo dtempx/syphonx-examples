@@ -1,6 +1,6 @@
 import * as playwright from 'playwright';
 import * as dotenv from 'dotenv';
-import * as syphonx from 'syphonx-core';
+import * as syphonx from 'syphonx-lib';
 import { SyphonXApi, ExtractState, invokeAsyncMethod } from 'syphonx-lib';
 
 dotenv.config();
@@ -18,6 +18,7 @@ const page = await browser.newPage();
 const result = await api.run({
     template,
     url,
+    unwrap: true,
     onExtract: async state => {
         const result = await page.evaluate<ExtractState, ExtractState>(script, state);
         return result;
