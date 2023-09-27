@@ -1,17 +1,18 @@
 import * as playwright from 'playwright';
 import * as dotenv from 'dotenv';
-import * as syphonx from 'syphonx-core';
+import * as syphonx from 'syphonx-lib';
 import { SyphonXApi, invokeAsyncMethod } from 'syphonx-lib';
 dotenv.config();
 const api = new SyphonXApi(process.env.SYPHONX_API_KEY);
 const template = process.argv[2] || 'examples/example.json';
 const url = process.argv[3];
 const script = new Function('state', `return ${syphonx.script}(state)`);
-const browser = await playwright.chromium.launch();
+const browser = await playwright.chromium.launch({ headless: false });
 const page = await browser.newPage();
 const result = await api.run({
     template,
     url,
+    unwrap: true,
     onExtract: async (state) => {
         const result = await page.evaluate(script, state);
         return result;

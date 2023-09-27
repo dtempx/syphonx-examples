@@ -12,7 +12,7 @@ const url = process.argv[3];
 
 const script = new Function('state', `return ${syphonx.script}(state)`) as (state: ExtractState) => ExtractState;
 
-const browser = await playwright.chromium.launch();
+const browser = await playwright.chromium.launch({ headless: false });
 const page = await browser.newPage();
 
 const result = await api.run({
@@ -38,6 +38,7 @@ const result = await api.run({
             locator = await page.frameLocator(frame).locator(selector);
         else
             locator = await page.locator(selector);
+
         const result = await invokeAsyncMethod(locator, method, params);
         return result;
     },

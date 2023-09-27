@@ -1,13 +1,7 @@
 # syphonx-examples
 Example projects using the SyphonX API
 
-## Basic Examples
-* [playwright-basic](playwright-basic) Basic online example using Playwright
-* [cheerio-basic](cheerio-basic) Basic offline example using Cheerio to extract data from HTML
+* [online](online) Demonstrates using SyphonX API to extract data from an online web-page using Playwright
+* [offline](offline) Demonstrates using SyphonX API to extract data from an offline HTML file that is stored locally
 
-## API Examples
-* [online](online) API example for online using Playwright
-* [offline](offline) API example for processing HTML offline
-
-## Other
-* [playwright-basic-cjs](playwright-basic-cjs) Demonstrates legacy CommonJS modules working
+[more examples](./more-examples.md)

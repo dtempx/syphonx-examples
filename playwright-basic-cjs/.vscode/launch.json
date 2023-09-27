@@ -18,7 +18,7 @@
                 //"SYPHONX_API_KEY": "00000000000000000000"
             },
             "program": "${workspaceFolder}/index.js",
-            "args": ["examples/amazon.json"]
+            "args": []
         }
     ]
 }

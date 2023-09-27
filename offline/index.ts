@@ -12,3 +12,4 @@ const unwrap = true;
 
 const result = await api.run({ template, html, unwrap });
 console.log(JSON.stringify(result, null, 2));
+process.exit();

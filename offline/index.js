@@ -8,4 +8,5 @@ const html = await fs.readFile(process.argv[3] || './example.html', 'utf8');
 const unwrap = true;
 const result = await api.run({ template, html, unwrap });
 console.log(JSON.stringify(result, null, 2));
+process.exit();
 //# sourceMappingURL=index.js.map

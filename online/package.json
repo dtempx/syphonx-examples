@@ -13,7 +13,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "playwright": "^1.35.0",
-    "syphonx-lib": "^1.2.45"
+    "syphonx-lib": "^1.2.53"
   },
   "devDependencies": {
     "@types/node": "^20.3.0",
